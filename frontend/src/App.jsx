@@ -1,13 +1,10 @@
-import { Route, Routes } from 'react-router-dom';
+import { Router } from './Router';
 import './App.css';
-import { CreateProject } from './pages/CreateProject';
 
 function App() {
   
   return (
-    <Routes>
-      <Route path="/" element={<CreateProject />} />
-    </Routes>
+    <Router />
   )
 }
 
