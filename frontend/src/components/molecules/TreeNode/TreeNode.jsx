@@ -1,12 +1,15 @@
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { useState } from "react";
 import { FileIcon } from "../../atoms/FileIcon/FileIcon";
+import { useEditorSocketStore } from "../../../store/editorSocketStore";
 
 export const TreeNode = ({
     fileFolderData
 }) => {
 
     const [ visibility, setVisibility ] = useState({});
+
+    const { editorSocket } = useEditorSocketStore();
 
     function toggleVisibility(name) {
        setVisibility({
@@ -20,6 +23,12 @@ export const TreeNode = ({
        return names[names.length - 1];
     }
 
+    function handleDoubleClick(fileFolderData) {
+        console.log("Double Clicked on", fileFolderData);
+        editorSocket.emit("readFile", {
+            pathToFileOrFolder: fileFolderData.path
+        });
+    }
 
     return (
        ( fileFolderData &&  
@@ -58,6 +67,7 @@ export const TreeNode = ({
                         marginLeft: "5px",
                         color: "white"
                     }}
+                    onDoubleClick={() => handleDoubleClick(fileFolderData)}
                 >
                     {fileFolderData.name}
                   </p>
