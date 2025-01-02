@@ -1,15 +1,15 @@
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import "@xterm/xterm/css/xterm.css"; //required for styles
-import { useEffect, useRef } from 'react';
-import { io } from "socket.io-client";  
-import { data, useParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react'; 
+import { AttachAddon } from '@xterm/addon-attach';
+import { useTerminalSocketStore } from '../../../store/terminalSocketStore';
 
 export const BrowserTerminal = () => {
 
     const terminalRef = useRef(null);
-    const socket = useRef(null);
-    const { projectId: projectIdfromUrl } = useParams();
+
+    const { terminalSocket } = useTerminalSocketStore();
 
     useEffect(() => {
         const term = new Terminal({
@@ -25,7 +25,7 @@ export const BrowserTerminal = () => {
                 cyan: "#8be9fd",
             },
             fontSize: 16,
-            fontFamily: "Ubuntu Mono",
+            fontFamily: "Cascadia Code",
             convertEol: true, //converts CRLF to LF
         });
 
@@ -33,27 +33,14 @@ export const BrowserTerminal = () => {
         let fitAddon = new FitAddon();
         term.loadAddon(fitAddon);
         fitAddon.fit();
-
-        socket.current = io(`${import.meta.env.VITE_BACKEND_URL}/terminal`, {
-            query: {
-                projectId: projectIdfromUrl,
+ 
+        if(terminalSocket) {
+            terminalSocket.onopen = () => {
+                const attachAddon = new AttachAddon(terminalSocket);
+                term.loadAddon(attachAddon);
             }
-        });
-
-        socket.current.on("shell-output", (data) => {
-            term.write(data); 
-        });
-
-        term.onData((data) => {
-            console.log(data);
-            socket.current.emit("shell-input", data);
-        });
-
-        return () => {
-            term.dispose();
-            socket.current.disconnect();
         }
-    }, []);
+    }, [terminalSocket]);
 
     return (
         <div
