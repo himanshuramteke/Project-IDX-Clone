@@ -40,14 +40,18 @@ export const BrowserTerminal = () => {
                 term.loadAddon(attachAddon);
             }
         }
-    }, [terminalSocket]);
+        
+        return () => {
+            term.dispose();
+            terminalSocket?.close();
+        }
+    }, [terminalSocket])
 
     return (
         <div
            ref={terminalRef}
            style={{
-            height: "25vh",
-            overflow: "auto",
+            width: "100vw",
            }}
            className='terminal'
            id="terminal-container"  

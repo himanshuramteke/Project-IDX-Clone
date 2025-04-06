@@ -1,13 +1,16 @@
 import { useParams } from "react-router-dom"
 import { EditorComponent } from "../components/molecules/EditorComponent/EditorComponent";
-import { EditorButton } from "../components/atoms/EditorButton/EditorButton";
 import { TreeStructure } from "../components/organisms/TreeStructure/TreeStructure";
 import { useTreeStructureStore } from "../store/treeStructureStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useEditorSocketStore } from "../store/editorSocketStore";
 import { io } from "socket.io-client";
 import { BrowserTerminal } from "../components/molecules/BrowserTerminal/BrowserTerminal";
 import { useTerminalSocketStore } from "../store/terminalSocketStore";
+import { Browser } from "../components/organisms/Browser/Browser";
+import { Button } from "antd";
+import { Allotment } from "allotment";
+import "allotment/dist/style.css";
 
 export const ProjectPlayground = () => {
 
@@ -15,15 +18,11 @@ export const ProjectPlayground = () => {
 
     const { setProjectId, projectId } = useTreeStructureStore();
 
-    const { setEditorSocket, editorSocket } = useEditorSocketStore();
+    const { setEditorSocket } = useEditorSocketStore();
 
-    const { setTerminalSocket } = useTerminalSocketStore();
+    const { terminalSocket, setTerminalSocket } = useTerminalSocketStore();
 
-    function fetchPort() {
-      console.log(editorSocket);
-      editorSocket.emit("getPort");
-      console.log("fetching port");
-    }
+    const [ loadBrowser, setLoadBrowser ] = useState(false);
 
     useEffect(() => {
       if(projectIdfromUrl) {
@@ -35,7 +34,14 @@ export const ProjectPlayground = () => {
                 projectId : projectIdfromUrl
               }
           });
-          const ws = new WebSocket("ws://localhost:3000/terminal?projectId="+projectIdfromUrl);
+
+          try {
+            const ws = new WebSocket("ws://localhost:4000/terminal?projectId="+projectIdfromUrl);
+            setTerminalSocket(ws)
+          } catch (error) {
+            console.log("error in ws",error);
+          }
+          
           setEditorSocket(editorSocketConn);
       }
     },[setProjectId, projectIdfromUrl, setEditorSocket, setTerminalSocket]);
@@ -51,26 +57,51 @@ export const ProjectPlayground = () => {
                       paddingTop: "0.3vh",
                       minWidth: "250px",
                       maxWidth: "25%",
-                      height: "99.7vh",
+                      height: "100vh",
                       overflow: "auto"
                     }}
                 >
                   <TreeStructure />
                 </div>
             )}  
-            <EditorComponent />
-         </div>
-         <EditorButton isActive={false}/>
-         <EditorButton isActive={true}/>
-         <div>
-          <button onClick={fetchPort}
-          >
-            getport
-          </button>
-         </div>
-         <div>
-           <BrowserTerminal />
-         </div>
+            <div
+                style={{
+                    width: "100vw",
+                    height: "100vh"
+                }}
+            >
+                <Allotment>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: "#282a36"
+                        }}
+                    >
+                    <Allotment
+                        vertical={true}
+                    >
+                        <EditorComponent />
+                        {/* <Divider style={{color: 'white', backgroundColor: '#333254'}} plain>Terminal</Divider> */}
+                        <BrowserTerminal />
+                    </Allotment>
+                        
+                       
+                        
+                    </div>
+                    <div>
+                        <Button
+                            onClick={() => setLoadBrowser(true)}
+                        >
+                            Load my browser
+                        </Button>
+                        { loadBrowser && projectIdfromUrl && terminalSocket && <Browser projectId={projectIdfromUrl} />}
+                    </div>
+                </Allotment>
+            </div>
+        </div>
        </>
     )
 }
