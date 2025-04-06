@@ -1,4 +1,5 @@
 export const handleTerminalCreation = (container, ws) => {
+    
     container.exec({
         Cmd: ["/bin/bash"],
         AttachStdin: true,
@@ -34,7 +35,7 @@ export const handleTerminalCreation = (container, ws) => {
                     return;
                 }
                 stream.write(data);
-            })
+            });
         })
     })
 }
