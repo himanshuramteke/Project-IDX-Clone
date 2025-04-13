@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useEditorSocketStore } from "../../../store/editorSocketStore";
 import { ReloadOutlined } from "@ant-design/icons";
 
-export const Browser = () => {
+export const Browser = ({ projectId }) => {
     
     const { port } = usePortStore();
     const browserRef = useRef(null);
@@ -13,7 +13,7 @@ export const Browser = () => {
 
     useEffect(()=> {
         if(!port) {
-            editorSocket.emit("getPort", { containerName: projectId });
+            editorSocket?.emit("getPort", { containerName: projectId });
         }
     }, [port, editorSocket]);
 

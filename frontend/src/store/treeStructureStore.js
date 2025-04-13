@@ -9,7 +9,7 @@ export const useTreeStructureStore = create((set, get) => {
     return {
         projectId: null,
         treeStructure: null,
-        setTreeStructure: async (projectId) => {
+        setTreeStructure: async () => {
             const id = get().projectId;
             const data = await queryClient.fetchQuery({
                 queryKey: [`projecttree-${id}`],
