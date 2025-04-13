@@ -7,6 +7,5 @@ const router = express.Router();
 
 router.use('/ping', pingCheck);
 router.use('/projects', projectRouter);
-router.use('/auth', authRouter);
 
 export default router;
