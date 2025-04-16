@@ -48,7 +48,8 @@ export const EditorComponent = () => {
 
   
     return (
-        <>{ editorState.theme &&
+        <>
+        { editorState.theme &&
           <Editor
             width={'100%'}
             defaultLanguage={undefined}

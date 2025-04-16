@@ -30,7 +30,7 @@ export const useEditorSocketStore = create((set) => ({
             projectTreeStructureSetter();
        });
        
-        incomingSocket?.on("getPortSuccess" , (port) => {
+        incomingSocket?.on("getPortSuccess" , ({ port }) => {
             console.log("port data", port);   
             portSetter(port);
         })

@@ -6,8 +6,8 @@ import { ReloadOutlined } from "@ant-design/icons";
 
 export const Browser = ({ projectId }) => {
     
-    const { port } = usePortStore();
     const browserRef = useRef(null);
+    const { port } = usePortStore();
 
     const { editorSocket } = useEditorSocketStore();
 

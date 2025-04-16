@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createProjectApi } from "../../../apis/projects";
 
 export const useCreateProject = () => {
-    const { mutateAsync, isLoading, isSuccess, isError, error, data } = useMutation({
+    const { mutateAsync, isPending, isSuccess, error } = useMutation({
         mutationFn: createProjectApi,
         onSuccess: (data) => {
             console.log("Project created successfully", data);
@@ -14,10 +14,8 @@ export const useCreateProject = () => {
 
     return {
         createProjectMutation: mutateAsync,
-        isLoading,
+        isPending,
         isSuccess,
-        isError,
-        data,
         error
     }
 }
