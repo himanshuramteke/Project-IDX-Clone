@@ -14,7 +14,7 @@ export const listContainer = async () => {
 
 export const handleContainerCreate = async (projectId, terminalSocket, req, tcpSocket, head) => {
     console.log("Project id received for container create", projectId);
-   try {
+   try {    
 
     //Delete any existing container with the same name
 
@@ -86,7 +86,7 @@ export async function getContainerPort(containerName) {
         const containerInfo = await docker.getContainer(container[0].id).inspect();
         console.log("Container info", containerInfo);
         try {
-            return containerInfo.NetworkSettings.Ports["5173/tcp"][0].HostPort;
+            return containerInfo?.NetworkSettings?.Ports["5173/tcp"][0].HostPort;
         } catch (error) {
             console.log("port not present");
             return undefined;

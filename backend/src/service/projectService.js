@@ -12,7 +12,7 @@ export const createProjectService = async () => {
 
     await fs.mkdir(`./projects/${projectId}`);
 
-    // After this call the npm creaste vite command in the newly created project folder
+    // After this call the npm create vite command in the newly created project folder
 
     const response = await execPromisified(REACT_PROJECT_COMMAND, {
         cwd: `./projects/${projectId}`

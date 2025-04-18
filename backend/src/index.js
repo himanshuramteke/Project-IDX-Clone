@@ -6,7 +6,6 @@ import { Server } from "socket.io";
 import { PORT } from "./config/serverConfig.js";
 import chokidar from "chokidar";
 import { handleEditorSocketEvents } from "./socketHandlers/editorHandler.js";
-import { connectDB } from "./config/dbConfig.js";
 
 const app = express();
 const server = createServer(app);
@@ -57,6 +56,6 @@ editorNamespace.on("connection", (socket) => {
 
 server.listen(PORT, () => {
     console.log(`Server is listening on ${PORT}`);
-    connectDB();
+    console.log(process.cwd());
 });
 

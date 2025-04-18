@@ -55,6 +55,22 @@ export const handleEditorSocketEvents = (socket, editorNamespace) => {
             });
         }
     });
+
+    socket.on("renameFile", async ({ oldPath, newPath }) => {
+        try {
+           const response = await fs.rename(oldPath, newPath);
+           socket.emit("ranameFileSuccess", {
+            message: "File renamed successfully",
+            oldPath,
+            newPath
+           }); 
+        } catch (error) {
+            console.log("Error renaming the file", error);
+            socket.emit("error", {
+                data: "Error renaming the file",
+            });
+        }
+    })
       
     socket.on("deleteFile", async ({ pathToFileOrFolder }) => {
         try {
