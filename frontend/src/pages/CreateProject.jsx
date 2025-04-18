@@ -1,4 +1,4 @@
-import { Button, Flex, Layout, Space, Typography, notification } from "antd";
+import { Button, Flex, Layout, message, Space, Typography } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCreateProject } from "../hooks/apis/mutations/useCreateProject";
@@ -11,29 +11,25 @@ export const CreateProject = () => {
     const navigate = useNavigate();
     const [isCreating, setIsCreating] = useState(false);
 
-
+333
     async function handleCreateProject() {
         if (isCreating) {
-            notification.success({
-                message: 'Creating Project',
-                placement: 'topRight',
-            });
             return;
         }
-
-        console.log("Going to trigger the api");
         setIsCreating(true);
 
-        try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            const response = await createProjectMutation();
-            console.log("Now we should redirect to the editor");
-            navigate(`/project/${response.data}`);
-        } catch (error) {
-            console.log("Error creating project", error);
-        } finally {
-            setIsCreating(false);
-        }
+        setTimeout(async () => {
+            try {
+              const response = await createProjectMutation();
+              message.success("Project created successfully");
+              navigate(`/project/${response.data}`);
+            } catch (error) {
+              console.error("Error creating project", error);
+              message.error("Error creating project");
+            } finally {
+              setIsCreating(false);
+            }
+        }, 2000);
     }
 
     return (
